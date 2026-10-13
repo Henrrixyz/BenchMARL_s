@@ -559,6 +559,7 @@ class Experiment(CallbackNotifier):
                     if not self.on_policy
                     else 0
                 ),
+                auto_register_policy_transforms=False,
             )
         else:
             if self.config.off_policy_init_random_frames and not self.on_policy:
