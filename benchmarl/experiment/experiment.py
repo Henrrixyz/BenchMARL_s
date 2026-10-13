@@ -23,7 +23,7 @@ from typing import Any, Dict, List, Optional, Union
 import torch
 from tensordict import TensorDictBase
 from tensordict.nn import TensorDictSequential
-from torchrl.collectors import SyncDataCollector
+from torchrl.collectors import Collector
 
 from torchrl.envs import ParallelEnv, SerialEnv, TransformedEnv
 from torchrl.envs.transforms import Compose
@@ -546,9 +546,10 @@ class Experiment(CallbackNotifier):
             self.group_policies.update({group: group_policy[0]})
 
         if not self.config.collect_with_grad:
-            self.collector = SyncDataCollector(
-                self.env_func,
-                self.policy,
+            self.collector = Collector(
+                create_env_fn=self.env_func,
+                policy=self.policy,
+                backend="direct",
                 device=self.config.sampling_device,
                 storing_device=self.config.sampling_device,
                 frames_per_batch=self.config.collected_frames_per_batch(self.on_policy),
